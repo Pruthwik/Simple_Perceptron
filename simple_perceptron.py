@@ -1,74 +1,39 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[1]:
-
-
+"""Demonstrate the simple perceptron algorithm."""
 from random import random
+import numpy as np
 
-
-# In[2]:
-
-
-random()
-
-
-# In[3]:
-
-
+# define the input shape
 input_shape = 3
-
-
-# In[4]:
-
-
+# define your inputs, these inputs are same for all the 2-variable logic gates
 inputs = [(0, 0), (0, 1), (1, 0), (1, 1)]
 
 
-# In[5]:
-
-
 def augment_inputs(inputs):
-    return [(1, x[0], x[1]) for x in inputs]
+    """Augment the inputs, add +1 as the 1st dimension."""
+    return np.array([(1, x[0], x[1]) for x in inputs])
 
 
-# In[6]:
+print(augment_inputs(inputs))
 
 
-augment_inputs(inputs)
+def random_initialize_weights(input_shape):
+    """Randomly initialize the weights."""
+    return np.array([random() for i in range(input_shape)])
 
 
-# In[7]:
+def zero_initialize_weights(input_shape):
+    """Zero initialize the weights."""
+    return np.zeros(input_shape)
 
 
-def initialize_weights(input_shape):
-    return [random() for i in range(input_shape)]
-
-
-# In[28]:
-
-
-W = initialize_weights(input_shape)
-
-
-# In[9]:
-
-
-W
-
-
-# In[29]:
-
-
+# define your output classes or labels; this is a simple case of AND gate
 classes = [0, 0, 0, 1]
-import numpy as np
-W = np.array(W)
-
-
-# In[30]:
 
 
 def simple_perceptron(X, W, classes, itr=1):
+    """Simple perceptron algorithm"""
     print(X, W)
     for i in range(itr):
         sat = list()
@@ -84,26 +49,26 @@ def simple_perceptron(X, W, classes, itr=1):
                 sat.append(True)
             print(W.dot(x), classes[ind], ind)
         if np.all(sat):
-            print('i=', i)
+            print('i =', i)
             return W
     return W
 
 
-# In[31]:
-
-
+# run the simple perceptron algorithm with zero initialization
 augmented_inputs = augment_inputs(inputs)
+W = zero_initialize_weights(input_shape)
 final_W = simple_perceptron(augmented_inputs, W, classes, 10)
 
-
-# In[21]:
-
-
-final_W
-
-
-# In[ ]:
+# run the simple perceptron algorithm with random initialization
+augmented_inputs = augment_inputs(inputs)
+W = random_initialize_weights(input_shape)
+classes = [0, 1, 1, 1]
+final_W = simple_perceptron(augmented_inputs, W, classes, 10)
+print(final_W)
 
 
-
-
+# this below outputs are for the OR gate
+classes = [0, 1, 1, 1]
+W = random_initialize_weights(input_shape)
+final_W = simple_perceptron(augmented_inputs, W, classes, 10)
+print(final_W)
